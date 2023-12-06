@@ -267,13 +267,37 @@ cd /var/lib/jenkins/jobs/Ansible/builds/15/archive/playbooks/
 ![into folder](<images/run build 1.jpg>)
 
 ```
-ansible-playbook -i inventory/dev.yml playbooks/site.yaml
+ansible-playbook -i inventory/dev.yml playbooks/site.yml
 ```
 
 ```
 ansible-playbook -i /var/lib/jenkins/jobs/Ansible/builds/15/archive/inventory/dev.yml /var/lib/jenkins/jobs/Ansible/builds/15/archive/playbooks/site.yml
 ```
 ![error](error.jpg)
+
+![error2](images/error2.jpg)
+
+
+```
+eval ssh-agent
+```
+```
+eval `ssh-agent -s`
+```
+```
+ssh-add nfs.pem
+```
+```
+ssh-add -l
+```
+```
+ssh -A ubuntu@3.120.33.54
+```
+```
+ansible-playbook -i inventory/dev.yml playbooks/site.yml
+```
+![playbook success](<images/playbook succes.jpg>)
+
 
 Make sure that ***wireshark*** is deleted on all the servers by running 
 
@@ -283,10 +307,11 @@ wireshark --version
 
 Now you have learned how to use import_playbooks module and you have a ready solution to install/delete packages on multiple servers with just one command.
 
+---
 
+# Step 3 - Configure UAT Webservers with a role 'Webserver'
 
-
-
+We have our nice and clean dev environment, so let us put it aside and configure 2 new Web Servers as uat. We could write tasks to configure Web Servers in the same playbook, but it would be too messy, instead, we will use a dedicated role to make our configuration reusable.
 
 
 
