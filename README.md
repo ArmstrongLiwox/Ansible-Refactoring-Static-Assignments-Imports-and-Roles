@@ -135,8 +135,30 @@ You will see why the folder name has a prefix of static very soon. For now, just
 
 4. Inside site.yml file, import common.yml playbook.
 
+```
+---
+- hosts: all
+- import_playbook: ../static-assignments/common.yml
 
+```
 
+![import playbook](<images/import playbook.jpg>)
+
+The code above uses built in import_playbook Ansible module.
+
+Your folder structure should look like this;
+
+```
+├── static-assignments
+│   └── common.yml
+├── inventory
+    └── dev
+    └── stage
+    └── uat
+    └── prod
+└── playbooks
+    └── site.yml
+```
 
 
 
