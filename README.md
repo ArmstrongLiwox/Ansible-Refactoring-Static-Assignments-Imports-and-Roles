@@ -294,6 +294,9 @@ ssh-add -l
 ssh -A ubuntu@3.120.33.54
 ```
 ```
+cd /var/lib/jenkins/jobs/Ansible/builds/16/archive/
+```
+```
 ansible-playbook -i inventory/dev.yml playbooks/site.yml
 ```
 ![playbook success](<images/playbook succes.jpg>)
@@ -304,6 +307,8 @@ Make sure that ***wireshark*** is deleted on all the servers by running
 ```
 wireshark --version
 ```
+
+![wireshark gone](<images/wireshark gone.jpg>)
 
 Now you have learned how to use import_playbooks module and you have a ready solution to install/delete packages on multiple servers with just one command.
 
