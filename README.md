@@ -160,6 +160,133 @@ Your folder structure should look like this;
     └── site.yml
 ```
 
+5. Run ***ansible-playbook*** command against the *dev* environment
+
+> Since you need to apply some tasks to your *dev* servers and *wireshark* is already installed,
+
+- you can go ahead and create another playbook under ***static-assignments*** and name it ***common-del.yml***. 
+
+In this playbook, configure deletion of ***wireshark*** utility.
+
+```
+---
+- name: update web, nfs and db servers
+  hosts: webservers, nfs, db
+  remote_user: ec2-user
+  become: yes
+  become_user: root
+  tasks:
+  - name: delete wireshark
+    yum:
+      name: wireshark
+      state: removed
+
+- name: update LB server
+  hosts: lb
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  tasks:
+  - name: delete wireshark
+    apt:
+      name: wireshark-qt
+      state: absent
+      autoremove: yes
+      purge: yes
+      autoclean: yes
+
+```
+
+```
+---
+- name: update J-Web1, J-Web2,  J-NFS, and J-DB servers
+  hosts: J-Web1, J-Web2, J-NFS, J-DB
+  remote_user: ec2-user
+  become: yes
+  become_user: root
+  tasks:
+  - name: delete wireshark
+    yum:
+      name: wireshark
+      state: removed
+
+- name: update J-LB server
+  hosts: J-LB
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  tasks:
+  - name: delete wireshark
+    apt:
+      name: wireshark-qt
+      state: absent
+      autoremove: yes
+      purge: yes
+      autoclean: yes
+      
+```
+
+![common del](<images/common del.jpg>)
+
+- update site.yml with - 
+
+import_playbook: 
+
+```
+---
+- hosts: all
+- import_playbook: ../static-assignments/common-del.yml
+``` 
+
+instead of 
+
+```
+---
+- hosts: all
+- import_playbook: ../static-assignments/common.yml
+``` 
+
+![site.yml update](<images/siteyml update.jpg>)
+
+![ansible updated](<images/ansible updated.jpg>)
+
+- Run it against *dev* servers:
+
+```
+cd /home/ubuntu/ansible-config-mgt/
+```
+```
+cd /var/lib/jenkins/jobs/Ansible/builds/15/archive/inventory/
+```
+```
+cd /var/lib/jenkins/jobs/Ansible/builds/15/archive/playbooks/
+```
+
+![cd into repo](<images/cd into git repo on server.jpg>)
+
+![into folder](<images/run build 1.jpg>)
+
+```
+ansible-playbook -i inventory/dev.yml playbooks/site.yaml
+```
+
+```
+ansible-playbook -i /var/lib/jenkins/jobs/Ansible/builds/15/archive/inventory/dev.yml /var/lib/jenkins/jobs/Ansible/builds/15/archive/playbooks/site.yml
+```
+![error](error.jpg)
+
+Make sure that ***wireshark*** is deleted on all the servers by running 
+
+```
+wireshark --version
+```
+
+Now you have learned how to use import_playbooks module and you have a ready solution to install/delete packages on multiple servers with just one command.
+
+
+
+
+
 
 
 
